@@ -1,4 +1,4 @@
-import { SafeAreaView, View, Text, Image, StyleSheet, ImageSourcePropType } from 'react-native';
+import { SafeAreaView, View, Text,   StyleSheet, ImageSourcePropType } from 'react-native';
 
 interface HeaderProps {
   title?: string;
