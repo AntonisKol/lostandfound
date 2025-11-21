@@ -1,11 +1,10 @@
-import { SafeAreaView, View, Text,   StyleSheet, ImageSourcePropType } from 'react-native';
+import { SafeAreaView, View, Text, StyleSheet, ImageSourcePropType } from 'react-native';
 
 interface HeaderProps {
   title?: string;
-  logo?: ImageSourcePropType;
-}
+ }
 
-export default function Header({ title = 'Fundstück', logo }: HeaderProps) {
+export default function Header({ title = 'Fundstück',   }: HeaderProps) {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
