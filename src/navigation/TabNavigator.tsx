@@ -7,11 +7,10 @@ const Tab = createBottomTabNavigator();
 
 export default function TabNavigator() {
   return (
-    <Tab.Navigator screenOptions={{ headerShown: false }}>
+    <Tab.Navigator screenOptions={{ headerShown: false }}>      
+    <Tab.Screen name="Feed" component={FoundItemsFeed} />
        <Tab.Screen name="Found" component={FoundItemScreen} />
       <Tab.Screen name="Lost" component={LandingScreen} />
-      <Tab.Screen name="Feed" component={FoundItemsFeed} />
-
     </Tab.Navigator>
   );
 }
