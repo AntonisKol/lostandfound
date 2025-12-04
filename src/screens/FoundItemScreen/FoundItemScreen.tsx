@@ -4,7 +4,7 @@ import * as ImagePicker from "expo-image-picker";
 import { uploadImageToCloudinary } from "../../utils/cloudinary";
 import { supabase } from "../../supabase/supabase";
 
-export default function FoundItemScreen() {
+ const FoundItemScreen = () => {
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [uploadedUrl, setUploadedUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -81,3 +81,4 @@ const styles = StyleSheet.create({
   image: { width: 200, height: 200, marginBottom: 16, borderRadius: 12 },
   input: { width: "100%", borderWidth: 1, borderColor: "#ccc", padding: 8, marginVertical: 6, borderRadius: 8 },
 });
+export default FoundItemScreen;

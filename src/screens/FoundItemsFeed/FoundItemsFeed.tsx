@@ -11,7 +11,7 @@ interface FoundItem {
   created_at: string;
 }
 
-export default function FoundItemsFeed() {
+const FoundItemsFeed = () => {
   const [items, setItems] = useState<FoundItem[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -87,3 +87,6 @@ const styles = StyleSheet.create({
   location: { color: "#555" },
   notes: { fontStyle: "italic", color: "#333" },
 });
+
+
+export default FoundItemsFeed;

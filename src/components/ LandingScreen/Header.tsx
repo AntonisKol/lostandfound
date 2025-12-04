@@ -4,7 +4,7 @@ interface HeaderProps {
   title?: string;
  }
 
-export default function Header({ title = 'Fundstück',   }: HeaderProps) {
+export default function Header({ title = 'Fundstück'}: HeaderProps) {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>

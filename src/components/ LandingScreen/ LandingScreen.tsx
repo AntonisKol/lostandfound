@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet } from "react-native";
 
-export default function LandingScreen() {
+const LandingScreen = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Fundstück</Text>
@@ -19,3 +19,5 @@ const styles = StyleSheet.create({
     fontSize: 60,
   },
 });
+
+export default LandingScreen;
