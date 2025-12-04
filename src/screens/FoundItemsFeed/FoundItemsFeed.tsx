@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, FlatList, Image, ActivityIndicator } from "react-native";
+import  { useEffect, useState } from "react";
+import { View, Text, StyleSheet, FlatList, Image, ActivityIndicator, TouchableOpacity } from "react-native";
 import { supabase } from "../../supabase/supabase";
+import { useNavigation } from "@react-navigation/native";
 
 interface FoundItem {
   id: string;
@@ -14,6 +15,7 @@ interface FoundItem {
 const FoundItemsFeed = () => {
   const [items, setItems] = useState<FoundItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const navigation = useNavigation<any>();
 
   const fetchItems = async () => {
     setLoading(true);
@@ -32,35 +34,48 @@ const FoundItemsFeed = () => {
   };
 
   useEffect(() => {
-  fetchItems();
+    fetchItems();
 
-  const channel = supabase
-    .channel("found_items_changes")
-    .on(
-      "postgres_changes",
-      { event: "*", schema: "public", table: "found_items" },
-      () => fetchItems()
-    )
-    .subscribe();
+    const channel = supabase
+      .channel("found_items_changes")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "found_items" },
+        () => fetchItems()
+      )
+      .subscribe();
 
-  return () => {
-    supabase.removeChannel(channel);
-  };
-}, []);
-
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
 
   const renderItem = ({ item }: { item: FoundItem }) => (
-    <View style={styles.item}>
-      {item.image_url && <Image source={{ uri: item.image_url }} style={styles.image} />}
-      <View style={{ flex: 1, marginLeft: 10 }}>
-        <Text style={styles.category}>{item.category}</Text>
-        <Text style={styles.location}>{item.location}</Text>
-        {item.notes ? <Text style={styles.notes}>{item.notes}</Text> : null}
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate("FoundItemDetails", {
+          id: item.id,
+          image_url: item.image_url,
+          category: item.category,
+          location: item.location,
+          notes: item.notes,
+          created_at: item.created_at,
+        })
+      }
+    >
+      <View style={styles.item}>
+        {item.image_url && <Image source={{ uri: item.image_url }} style={styles.image} />}
+        <View style={{ flex: 1, marginLeft: 10 }}>
+          <Text style={styles.category}>{item.category}</Text>
+          <Text style={styles.location}>{item.location}</Text>
+          {item.notes ? <Text style={styles.notes}>{item.notes}</Text> : null}
+        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
-  if (loading) return <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: 20 }} />;
+  if (loading)
+    return <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: 20 }} />;
 
   return (
     <FlatList
@@ -71,7 +86,7 @@ const FoundItemsFeed = () => {
       ListEmptyComponent={<Text>No items found yet.</Text>}
     />
   );
-}
+};
 
 const styles = StyleSheet.create({
   item: {
@@ -87,6 +102,5 @@ const styles = StyleSheet.create({
   location: { color: "#555" },
   notes: { fontStyle: "italic", color: "#333" },
 });
-
 
 export default FoundItemsFeed;

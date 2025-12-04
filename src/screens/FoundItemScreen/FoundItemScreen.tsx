@@ -3,17 +3,20 @@ import {
   View,
   Text,
   StyleSheet,
-  Button,
   Image,
-  ActivityIndicator,
   Alert,
   TextInput,
   Keyboard,
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
+  ActivityIndicator,
+  ScrollView,
 } from "react-native";
 
+import { LinearGradient } from "expo-linear-gradient";
+import { BlurView } from "expo-blur";
 import * as ImagePicker from "expo-image-picker";
 import { uploadImageToCloudinary } from "../../utils/cloudinary";
 import { supabase } from "../../supabase/supabase";
@@ -22,6 +25,7 @@ const FoundItemScreen = () => {
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [uploadedUrl, setUploadedUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+
   const [category, setCategory] = useState("");
   const [location, setLocation] = useState("");
   const [notes, setNotes] = useState("");
@@ -33,6 +37,7 @@ const FoundItemScreen = () => {
 
   const validate = () => {
     let valid = true;
+
     const newErrors: { category?: boolean; location?: boolean } = {};
 
     if (!category.trim()) {
@@ -73,14 +78,13 @@ const FoundItemScreen = () => {
 
       if (url) {
         setUploadedUrl(url);
-        Alert.alert("Success", "Image uploaded!");
       } else {
         Alert.alert("Error", "Upload failed");
       }
     }
   };
 
-  const postItem = async () => {
+  const saveItem = async () => {
     Keyboard.dismiss();
 
     if (!uploadedUrl) {
@@ -89,7 +93,7 @@ const FoundItemScreen = () => {
     }
 
     if (!validate()) {
-      Alert.alert("Missing info", "Category and location are required");
+      Alert.alert("Missing info", "Category and Location are required.");
       return;
     }
 
@@ -105,7 +109,7 @@ const FoundItemScreen = () => {
     if (error) {
       Alert.alert("Error", error.message);
     } else {
-      Alert.alert("Success", "Item posted successfully!");
+      Alert.alert("Success", "Item saved!");
       setImageUri(null);
       setUploadedUrl(null);
       setCategory("");
@@ -118,111 +122,197 @@ const FoundItemScreen = () => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
-        <View style={styles.container}>
-          <Text style={styles.title}>Found Item Post</Text>
+        <ScrollView contentContainerStyle={styles.page}>
+          <BlurView intensity={30} tint="light" style={styles.card}>
+            <Text style={styles.title}>Found Item</Text>
+            <Text style={styles.subtitle}>Post something you found</Text>
 
-          {imageUri && <Image source={{ uri: imageUri }} style={styles.image} />}
+            {/* Image preview */}
+            <Pressable style={styles.imageBox} onPress={pickAndUploadImage}>
+              {imageUri ? (
+                <Image source={{ uri: imageUri }} style={styles.image} />
+              ) : (
+                <Text style={styles.imageText}>Tap to add photo</Text>
+              )}
 
-          <Button
-            title={uploading ? "Uploading..." : "Pick & Upload Image"}
-            onPress={pickAndUploadImage}
-            disabled={uploading}
-          />
+              {uploading && (
+                <View style={styles.loadingOverlay}>
+                  <ActivityIndicator size="large" color="white" />
+                  <Text style={styles.loadingText}>Uploading...</Text>
+                </View>
+              )}
+            </Pressable>
 
-          <TextInput
-            style={[styles.input, errors.category && styles.errorInput]}
-            placeholder="Category"
-            value={category}
-            onChangeText={(text) => {
-              setCategory(text);
-              if (errors.category) {
-                setErrors((prev) => ({ ...prev, category: false }));
-              }
-            }}
-            returnKeyType="next"
-            onSubmitEditing={() => locationRef.current?.focus()}
-            blurOnSubmit={false}
-          />
+            {/* Inputs */}
+            <View style={styles.formGroup}>
+              <Text style={styles.label}>Category *</Text>
+              <TextInput
+                style={[styles.input, errors.category && styles.errorInput]}
+                placeholder="e.g. Wallet, Phone..."
+                value={category}
+                onChangeText={(text) => {
+                  setCategory(text);
+                  if (errors.category) setErrors((prev) => ({ ...prev, category: false }));
+                }}
+                returnKeyType="next"
+                onSubmitEditing={() => locationRef.current?.focus()}
+              />
+            </View>
 
-          <TextInput
-            ref={locationRef}
-            style={[styles.input, errors.location && styles.errorInput]}
-            placeholder="Location (ZIP)"
-            value={location}
-            onChangeText={(text) => {
-              setLocation(text);
-              if (errors.location) {
-                setErrors((prev) => ({ ...prev, location: false }));
-              }
-            }}
-            keyboardType="number-pad"
-            returnKeyType="next"
-            onSubmitEditing={() => notesRef.current?.focus()}
-            blurOnSubmit={false}
-          />
+            <View style={styles.formGroup}>
+              <Text style={styles.label}>Location (ZIP) *</Text>
+              <TextInput
+                ref={locationRef}
+                style={[styles.input, errors.location && styles.errorInput]}
+                placeholder="e.g. 10001"
+                keyboardType="number-pad"
+                value={location}
+                onChangeText={(text) => {
+                  setLocation(text);
+                  if (errors.location) setErrors((prev) => ({ ...prev, location: false }));
+                }}
+                returnKeyType="next"
+                onSubmitEditing={() => notesRef.current?.focus()}
+              />
+            </View>
 
-          <TextInput
-            ref={notesRef}
-            style={styles.input}
-            placeholder="Notes (optional)"
-            value={notes}
-            onChangeText={setNotes}
-            returnKeyType="done"
-            onSubmitEditing={Keyboard.dismiss}
-            multiline
-          />
+            <View style={styles.formGroup}>
+              <Text style={styles.label}>Notes</Text>
+              <TextInput
+                ref={notesRef}
+                style={[styles.input, styles.noteInput]}
+                placeholder="Color, brand, condition..."
+                value={notes}
+                onChangeText={setNotes}
+                multiline
+                returnKeyType="done"
+              />
+            </View>
 
-          <View style={{ marginTop: 10 }}>
-            <Button title="Post Item" onPress={postItem} />
-          </View>
-
-          {uploading && (
-            <ActivityIndicator
-              style={{ marginTop: 16 }}
-              size="large"
-              color="#0000ff"
-            />
-          )}
-        </View>
+            {/* Save Button */}
+            <Pressable disabled={uploading} onPress={saveItem}>
+              <LinearGradient
+                colors={["#000000ff", "#4d4a4aff"]}
+                style={styles.saveButton}
+              >
+                <Text style={styles.saveText}>Post Item</Text>
+              </LinearGradient>
+            </Pressable>
+          </BlurView>
+        </ScrollView>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  page: {
+    flexGrow: 1,
+    backgroundColor: "#f0f2f6",
+    alignItems: "center",
+    justifyContent: "center",
     padding: 20,
-    backgroundColor: "#fff",
+  },
+
+  card: {
+    width: "100%",
+    borderRadius: 24,
+    padding: 24,
+    backgroundColor: "rgba(255,255,255,0.9)",
+  },
+
+  title: {
+    fontSize: 26,
+    fontWeight: "800",
+    textAlign: "center",
+    marginBottom: 4,
+  },
+
+  subtitle: {
+    textAlign: "center",
+    color: "#666",
+    marginBottom: 16,
+  },
+
+  imageBox: {
+    width: "100%",
+    height: 220,
+    backgroundColor: "#e5e7eb",
+    borderRadius: 16,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 20,
+    overflow: "hidden",
+  },
+
+  image: {
+    width: "100%",
+    height: "100%",
+  },
+
+  imageText: {
+    color: "#444",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+
+  loadingOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0,0,0,0.4)",
     alignItems: "center",
     justifyContent: "center",
   },
-  title: {
-    fontSize: 28,
-    marginBottom: 20,
-    fontWeight: "700",
+
+  loadingText: {
+    marginTop: 10,
+    color: "white",
+    fontWeight: "600",
   },
-  image: {
-    width: 200,
-    height: 200,
-    marginBottom: 16,
-    borderRadius: 12,
+
+  formGroup: {
+    marginBottom: 12,
   },
+
+  label: {
+    marginBottom: 6,
+    fontWeight: "600",
+  },
+
   input: {
-    width: "100%",
+    backgroundColor: "#fff",
+    borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: "#ddd",
     padding: 12,
-    marginVertical: 6,
-    borderRadius: 8,
-    backgroundColor: "#fafafa",
+    fontSize: 15,
   },
+
+  noteInput: {
+    minHeight: 80,
+    textAlignVertical: "top",
+  },
+
   errorInput: {
-    borderColor: "red",
+    borderColor: "#ef4444",
+  },
+
+  saveButton: {
+    marginTop: 15,
+    paddingVertical: 16,
+    borderRadius: 14,
+    alignItems: "center",
+  },
+
+  saveText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "700",
+    letterSpacing: 0.5,
   },
 });
 
 export default FoundItemScreen;
+ 

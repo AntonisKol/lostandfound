@@ -4,7 +4,7 @@ interface HeaderProps {
   title?: string;
  }
 
-export default function Header({ title = 'Fundstück'}: HeaderProps) {
+const Header = ({ title = 'Fundstück'}: HeaderProps) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
@@ -30,3 +30,5 @@ const styles = StyleSheet.create({
     fontSize: 60,
     },
 });
+
+export default Header;
