@@ -67,7 +67,7 @@ const FoundItemsFeed = () => {
       data={items}
       keyExtractor={(item) => item.id}
       renderItem={renderItem}
-      contentContainerStyle={{ padding: 20 }}
+      contentContainerStyle={{ padding: 20, marginTop: 80 }}
       ListEmptyComponent={<Text>No items found yet.</Text>}
     />
   );
