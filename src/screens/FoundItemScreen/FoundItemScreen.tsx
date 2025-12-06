@@ -141,7 +141,7 @@ const FoundItemScreen = () => {
       setLocation("");
       setNotes("");
       setErrors({});
-      navigation.navigate("Feed"); // back to feed
+      navigation.navigate("Feed");  
     }
   };
 
