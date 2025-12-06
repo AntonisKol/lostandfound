@@ -140,7 +140,7 @@ const FoundItemScreen = () => {
       setNotes("");
       setErrors({});
     }    
-    navigation.navigate("Feed"); // Make sure this matches your TabNavigator screen name
+    navigation.navigate("Feed");  
 
   };
 
