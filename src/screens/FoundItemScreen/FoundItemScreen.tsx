@@ -13,8 +13,8 @@ import {
   Pressable,
   ActivityIndicator,
   ScrollView,
-  FlatList,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
@@ -31,8 +31,8 @@ const CATEGORIES = [
   "Jewelry",
   "Electronics",
   "Documents",
-  "Glasses", 
-   "Other",
+  "Glasses",
+  "Other",
 ];
 
 const FoundItemScreen = () => {
@@ -48,7 +48,7 @@ const FoundItemScreen = () => {
 
   const locationRef = useRef<TextInput>(null);
   const notesRef = useRef<TextInput>(null);
-
+  const navigation =  useNavigation()
   const validate = () => {
     let valid = true;
     const newErrors: { category?: boolean; location?: boolean } = {};
@@ -66,18 +66,26 @@ const FoundItemScreen = () => {
     return valid;
   };
 
-  const pickAndUploadImage = async () => {
-    const { granted } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (!granted) {
-      Alert.alert("Permission required", "Media library access is required.");
+  const pickImage = async (fromCamera: boolean) => {
+    const permission = fromCamera
+      ? await ImagePicker.requestCameraPermissionsAsync()
+      : await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (!permission.granted) {
+      Alert.alert("Permission required", "Camera or media access is required.");
       return;
     }
 
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 0.7,
-    });
+    const result = fromCamera
+      ? await ImagePicker.launchCameraAsync({
+          allowsEditing: true,
+          quality: 0.7,
+        })
+      : await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          quality: 0.7,
+        });
 
     if (!result.canceled && result.assets.length > 0) {
       const uri = result.assets[0].uri;
@@ -88,18 +96,22 @@ const FoundItemScreen = () => {
 
       setUploading(false);
 
-      if (url) {
-        setUploadedUrl(url);
-      } else {
-        Alert.alert("Error", "Upload failed");
-      }
+      if (url) setUploadedUrl(url);
+      else Alert.alert("Error", "Upload failed");
     }
+  };
+
+  const pickImageOption = () => {
+    Alert.alert("Add Photo", "Choose an option", [
+      { text: "Camera", onPress: () => pickImage(true) },
+      { text: "Library", onPress: () => pickImage(false) },
+      { text: "Cancel", style: "cancel" },
+    ]);
   };
 
   const saveItem = async () => {
     Keyboard.dismiss();
-
-    if (!uploadedUrl) {
+     if (!uploadedUrl) {
       Alert.alert("Missing image", "Please upload an image first.");
       return;
     }
@@ -118,9 +130,8 @@ const FoundItemScreen = () => {
       },
     ]);
 
-    if (error) {
-      Alert.alert("Error", error.message);
-    } else {
+    if (error) Alert.alert("Error", error.message);
+    else {
       Alert.alert("Success", "Item saved!");
       setImageUri(null);
       setUploadedUrl(null);
@@ -128,7 +139,9 @@ const FoundItemScreen = () => {
       setLocation("");
       setNotes("");
       setErrors({});
-    }
+    }    
+    navigation.navigate("Feed"); // Make sure this matches your TabNavigator screen name
+
   };
 
   const renderCategoryChip = (cat: string) => {
@@ -140,10 +153,7 @@ const FoundItemScreen = () => {
           setCategory(cat);
           if (errors.category) setErrors((prev) => ({ ...prev, category: false }));
         }}
-        style={[
-          styles.chip,
-          selected && styles.chipSelected,
-        ]}
+        style={[styles.chip, selected && styles.chipSelected]}
       >
         <Text style={[styles.chipText, selected && styles.chipTextSelected]}>{cat}</Text>
       </Pressable>
@@ -162,7 +172,7 @@ const FoundItemScreen = () => {
             <Text style={styles.subtitle}>Post something you found</Text>
 
             {/* Image preview */}
-            <Pressable style={styles.imageBox} onPress={pickAndUploadImage}>
+            <Pressable style={styles.imageBox} onPress={pickImageOption}>
               {imageUri ? (
                 <Image source={{ uri: imageUri }} style={styles.image} />
               ) : (
@@ -237,136 +247,27 @@ const FoundItemScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  page: {
-    flexGrow: 1,
-    backgroundColor: "#f0f2f6",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 20,
-  },
-
-  card: {
-    width: "100%",
-    borderRadius: 24,
-    padding: 24,
-    backgroundColor: "rgba(255,255,255,0.9)",
-  },
-
-  title: {
-    fontSize: 26,
-    fontWeight: "800",
-    textAlign: "center",
-    marginBottom: 4,
-  },
-
-  subtitle: {
-    textAlign: "center",
-    color: "#666",
-    marginBottom: 16,
-  },
-
-  imageBox: {
-    width: "100%",
-    height: 220,
-    backgroundColor: "#e5e7eb",
-    borderRadius: 16,
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 20,
-    overflow: "hidden",
-  },
-
-  image: {
-    width: "100%",
-    height: "100%",
-  },
-
-  imageText: {
-    color: "#444",
-    fontSize: 16,
-    fontWeight: "600",
-  },
-
-  loadingOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0,0,0,0.4)",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  loadingText: {
-    marginTop: 10,
-    color: "white",
-    fontWeight: "600",
-  },
-
-  formGroup: {
-    marginBottom: 12,
-  },
-
-  label: {
-    marginBottom: 6,
-    fontWeight: "600",
-  },
-
-  chipContainer: {
-    flexDirection: "row",
-    marginVertical: 6,
-  },
-
-  chip: {
-    paddingVertical: 6,
-    paddingHorizontal: 14,
-    backgroundColor: "#f0f0f0",
-    borderRadius: 20,
-    marginRight: 10,
-  },
-
-  chipSelected: {
-    backgroundColor: "#616980ff",
-  },
-
-  chipText: {
-    color: "#444",
-    fontWeight: "500",
-  },
-
-  chipTextSelected: {
-    color: "white",
-    fontWeight: "700",
-  },
-
-  input: {
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: "#ddd",
-    padding: 12,
-    fontSize: 15,
-  },
-
-  noteInput: {
-    minHeight: 80,
-    textAlignVertical: "top",
-  },
-
-  errorInput: {
-    borderColor: "#ef4444",
-  },
-
-  saveButton: {
-    marginTop: 15,
-    paddingVertical: 16,
-    borderRadius: 14,
-    alignItems: "center",
-  },
-
-  saveText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "700",
-    letterSpacing: 0.5,
-  },
+  page: { flexGrow: 1, backgroundColor: "#f0f2f6", alignItems: "center", justifyContent: "center", padding: 20 },
+  card: { width: "100%", borderRadius: 24, padding: 24, backgroundColor: "rgba(255,255,255,0.9)" },
+  title: { fontSize: 26, fontWeight: "800", textAlign: "center", marginBottom: 4 },
+  subtitle: { textAlign: "center", color: "#666", marginBottom: 16 },
+  imageBox: { width: "100%", height: 220, backgroundColor: "#e5e7eb", borderRadius: 16, alignItems: "center", justifyContent: "center", marginBottom: 20, overflow: "hidden" },
+  image: { width: "100%", height: "100%" },
+  imageText: { color: "#444", fontSize: 16, fontWeight: "600" },
+  loadingOverlay: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(0,0,0,0.4)", alignItems: "center", justifyContent: "center" },
+  loadingText: { marginTop: 10, color: "white", fontWeight: "600" },
+  formGroup: { marginBottom: 12 },
+  label: { marginBottom: 6, fontWeight: "600" },
+  chipContainer: { flexDirection: "row", marginVertical: 6 },
+  chip: { paddingVertical: 6, paddingHorizontal: 14, backgroundColor: "#f0f0f0", borderRadius: 20, marginRight: 10 },
+  chipSelected: { backgroundColor: "#616980ff" },
+  chipText: { color: "#444", fontWeight: "500" },
+  chipTextSelected: { color: "white", fontWeight: "700" },
+  input: { backgroundColor: "#fff", borderRadius: 12, borderWidth: 1, borderColor: "#ddd", padding: 12, fontSize: 15 },
+  noteInput: { minHeight: 80, textAlignVertical: "top" },
+  errorInput: { borderColor: "#ef4444" },
+  saveButton: { marginTop: 15, paddingVertical: 16, borderRadius: 14, alignItems: "center" },
+  saveText: { color: "white", fontSize: 16, fontWeight: "700", letterSpacing: 0.5 },
 });
 
 export default FoundItemScreen;
