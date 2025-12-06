@@ -184,12 +184,11 @@ const FoundItemScreen = () => {
             </View>
 
             <View style={styles.formGroup}>
-              <Text style={styles.label}>Location (ZIP) *</Text>
+              <Text style={styles.label}>Exact Location Found*</Text>
               <TextInput
                 ref={locationRef}
                 style={[styles.input, errors.location && styles.errorInput]}
-                placeholder="e.g. 10115"
-                keyboardType="number-pad"
+                placeholder="Street name, shop name, metro, etc."
                 value={location}
                 onChangeText={text => { setLocation(text); if (errors.location) setErrors(prev => ({ ...prev, location: false })); }}
                 returnKeyType="next"
@@ -211,8 +210,8 @@ const FoundItemScreen = () => {
             </View>
 
             <Pressable disabled={uploading} onPress={saveItem}>
-              <LinearGradient colors={["#616980ff", "#302e2eff"]} style={styles.saveButton}>
-                <Text style={styles.saveText}>Post Item</Text>
+              <LinearGradient colors={["#618071ff", "#6e6e6eff"]} style={styles.saveButton}>
+                <Text style={styles.saveText}>Report Found Item</Text>
               </LinearGradient>
             </Pressable>
           </BlurView>
