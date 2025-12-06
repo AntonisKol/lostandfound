@@ -1,7 +1,5 @@
 import axios from "axios";
-
- const CLOUD_NAME = "dqz3fsdng";
-const UPLOAD_PRESET = "Fundstueck";
+import { CLOUDINARY_CLOUD_NAME, CLOUDINARY_UPLOAD_PRESET } from "@env";
 
 export const uploadImageToCloudinary = async (imageUri: string): Promise<string | null> => {
   const data = new FormData();
@@ -10,11 +8,11 @@ export const uploadImageToCloudinary = async (imageUri: string): Promise<string 
     type: "image/jpeg",
     name: "upload.jpg",
   } as any);
-  data.append("upload_preset", UPLOAD_PRESET);
+  data.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
 
   try {
     const res = await axios.post(
-      `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+      `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
       data,
       { headers: { "Content-Type": "multipart/form-data" } }
     );
