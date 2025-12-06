@@ -13,6 +13,7 @@ import {
   Pressable,
   ActivityIndicator,
   ScrollView,
+  FlatList,
 } from "react-native";
 
 import { LinearGradient } from "expo-linear-gradient";
@@ -21,12 +22,25 @@ import * as ImagePicker from "expo-image-picker";
 import { uploadImageToCloudinary } from "../../utils/cloudinary";
 import { supabase } from "../../supabase/supabase";
 
+const CATEGORIES = [
+  "Phone",
+  "Wallet",
+  "Keys",
+  "Bag / Backpack",
+  "Clothing",
+  "Jewelry",
+  "Electronics",
+  "Documents",
+  "Glasses", 
+   "Other",
+];
+
 const FoundItemScreen = () => {
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [uploadedUrl, setUploadedUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
 
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState("Other");
   const [location, setLocation] = useState("");
   const [notes, setNotes] = useState("");
 
@@ -37,14 +51,12 @@ const FoundItemScreen = () => {
 
   const validate = () => {
     let valid = true;
-
     const newErrors: { category?: boolean; location?: boolean } = {};
 
     if (!category.trim()) {
       newErrors.category = true;
       valid = false;
     }
-
     if (!location.trim()) {
       newErrors.location = true;
       valid = false;
@@ -112,11 +124,30 @@ const FoundItemScreen = () => {
       Alert.alert("Success", "Item saved!");
       setImageUri(null);
       setUploadedUrl(null);
-      setCategory("");
+      setCategory("Other");
       setLocation("");
       setNotes("");
       setErrors({});
     }
+  };
+
+  const renderCategoryChip = (cat: string) => {
+    const selected = category === cat;
+    return (
+      <Pressable
+        key={cat}
+        onPress={() => {
+          setCategory(cat);
+          if (errors.category) setErrors((prev) => ({ ...prev, category: false }));
+        }}
+        style={[
+          styles.chip,
+          selected && styles.chipSelected,
+        ]}
+      >
+        <Text style={[styles.chipText, selected && styles.chipTextSelected]}>{cat}</Text>
+      </Pressable>
+    );
   };
 
   return (
@@ -137,7 +168,6 @@ const FoundItemScreen = () => {
               ) : (
                 <Text style={styles.imageText}>Tap to add photo</Text>
               )}
-
               {uploading && (
                 <View style={styles.loadingOverlay}>
                   <ActivityIndicator size="large" color="white" />
@@ -146,22 +176,19 @@ const FoundItemScreen = () => {
               )}
             </Pressable>
 
-            {/* Inputs */}
+            {/* Category Chips */}
             <View style={styles.formGroup}>
               <Text style={styles.label}>Category *</Text>
-              <TextInput
-                style={[styles.input, errors.category && styles.errorInput]}
-                placeholder="e.g. Wallet, Phone..."
-                value={category}
-                onChangeText={(text) => {
-                  setCategory(text);
-                  if (errors.category) setErrors((prev) => ({ ...prev, category: false }));
-                }}
-                returnKeyType="next"
-                onSubmitEditing={() => locationRef.current?.focus()}
-              />
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                style={styles.chipContainer}
+              >
+                {CATEGORIES.map(renderCategoryChip)}
+              </ScrollView>
             </View>
 
+            {/* Location */}
             <View style={styles.formGroup}>
               <Text style={styles.label}>Location (ZIP) *</Text>
               <TextInput
@@ -172,13 +199,15 @@ const FoundItemScreen = () => {
                 value={location}
                 onChangeText={(text) => {
                   setLocation(text);
-                  if (errors.location) setErrors((prev) => ({ ...prev, location: false }));
+                  if (errors.location)
+                    setErrors((prev) => ({ ...prev, location: false }));
                 }}
                 returnKeyType="next"
                 onSubmitEditing={() => notesRef.current?.focus()}
               />
             </View>
 
+            {/* Notes */}
             <View style={styles.formGroup}>
               <Text style={styles.label}>Notes</Text>
               <TextInput
@@ -192,10 +221,9 @@ const FoundItemScreen = () => {
               />
             </View>
 
-            {/* Save Button */}
             <Pressable disabled={uploading} onPress={saveItem}>
               <LinearGradient
-                colors={["#000000ff", "#4d4a4aff"]}
+                colors={["#616980ff", "#302e2eff"]}
                 style={styles.saveButton}
               >
                 <Text style={styles.saveText}>Post Item</Text>
@@ -281,6 +309,33 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
 
+  chipContainer: {
+    flexDirection: "row",
+    marginVertical: 6,
+  },
+
+  chip: {
+    paddingVertical: 6,
+    paddingHorizontal: 14,
+    backgroundColor: "#f0f0f0",
+    borderRadius: 20,
+    marginRight: 10,
+  },
+
+  chipSelected: {
+    backgroundColor: "#616980ff",
+  },
+
+  chipText: {
+    color: "#444",
+    fontWeight: "500",
+  },
+
+  chipTextSelected: {
+    color: "white",
+    fontWeight: "700",
+  },
+
   input: {
     backgroundColor: "#fff",
     borderRadius: 12,
@@ -315,4 +370,3 @@ const styles = StyleSheet.create({
 });
 
 export default FoundItemScreen;
- 

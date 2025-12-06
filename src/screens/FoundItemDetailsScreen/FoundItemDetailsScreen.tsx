@@ -22,7 +22,7 @@ const FoundItemDetailsScreen = () => {
       <Text style={styles.label}>Category:</Text>
       <Text style={styles.text}>{category}</Text>
 
-      <Text style={styles.label}>Location:</Text>
+      <Text style={styles.label}>Location found:</Text>
       <Text style={styles.text}>{location}</Text>
 
       {notes ? (
