@@ -1,5 +1,4 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import LandingScreen from "../components/ LandingScreen/ LandingScreen";
 import FoundItemScreen from "../screens/FoundItemScreen/FoundItemScreen";
 import FoundItemsFeed from "../screens/FoundItemsFeed/FoundItemsFeed";
 import MapScreen from "../screens/MapScreen/MapScreen";
