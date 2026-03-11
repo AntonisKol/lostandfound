@@ -36,15 +36,22 @@ This project is actively under development.
 Some features (lost items, chat, notifications) are planned but not yet implemented.
 
 ## Screenshots
-![IMG_0026](https://github.com/user-attachments/assets/310e40b0-2791-404e-b0a8-67252cbc525a)
-![IMG_0027](https://github.com/user-attachments/assets/4ce9c8e6-8e73-4376-b562-5c3edc57b9cc)
-![IMG_0028](https://github.com/user-attachments/assets/cecd5e3d-f8e8-4664-862e-e61df08cc35d)
-![IMG_0029](https://github.com/user-attachments/assets/cc655f17-7cb2-4bb7-9641-b85e5bbd9af9)
-![IMG_0030](https://github.com/user-attachments/assets/b7a1bc1e-b448-42be-8c5c-e3818c85b1af)
-![IMG_0031](https://github.com/user-attachments/assets/51084e88-442d-4212-bfd2-a1e4410c9b9f)
-![IMG_0032](https://github.com/user-attachments/assets/68ad00c8-abd0-4b96-aa64-ccc076d47d1d)
-<img width="585" height="1266" alt="IMG_0033" src="https://github.com/user-attachments/assets/d168a26b-8229-4c93-9b58-c8924107a561" />
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/310e40b0-2791-404e-b0a8-67252cbc525a" width="250" />
+  <img src="https://github.com/user-attachments/assets/4ce9c8e6-8e73-4376-b562-5c3edc57b9cc" width="250" />
+  <img src="https://github.com/user-attachments/assets/cecd5e3d-f8e8-4664-862e-e61df08cc35d" width="250" />
+</p>
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/cc655f17-7cb2-4bb7-9641-b85e5bbd9af9" width="250" />
+  <img src="https://github.com/user-attachments/assets/b7a1bc1e-b448-42be-8c5c-e3818c85b1af" width="250" />
+  <img src="https://github.com/user-attachments/assets/51084e88-442d-4212-bfd2-a1e4410c9b9f" width="250" />
+</p>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/68ad00c8-abd0-4b96-aa64-ccc076d47d1d" width="250" />
+  <img src="https://github.com/user-attachments/assets/d168a26b-8229-4c93-9b58-c8924107a561" width="250" />
+</p>
 
 ## Installation
 
