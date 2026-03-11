@@ -49,3 +49,6 @@ eas-build:
 
     - name: EAS Build Android
       run: npx eas build --platform android --non-interactive
+
+    - name: Clean npm cache
+      run: npm cache clean --force
