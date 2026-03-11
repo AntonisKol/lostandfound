@@ -36,11 +36,16 @@ This project is actively under development.
 Some features (lost items, chat, notifications) are planned but not yet implemented.
 
 ## Screenshots
-<img width="585" height="1266" alt="IMG_0039" src="https://github.com/user-attachments/assets/9f07fcae-c2b0-4738-ad3f-309ed2ef736a" />
-<img width="585" height="1266" alt="IMG_0038" src="https://github.com/user-attachments/assets/5157ef21-ba25-4731-a0dd-7dd95d02dfb2" />
-<img width="585" height="1266" alt="IMG_0037" src="https://github.com/user-attachments/assets/39d4e097-ca9b-4373-8990-d7f05320a85d" />
-<img width="585" height="1266" alt="IMG_0036" src="https://github.com/user-attachments/assets/da754549-d118-4735-8fe7-64ceea6e9c80" />
-<img width="585" height="1266" alt="IMG_0034" src="https://github.com/user-attachments/assets/1bd35e3a-8b47-4351-bbfc-f2bd4796a87f" />
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/9f07fcae-c2b0-4738-ad3f-309ed2ef736a" width="250" />
+  <img src="https://github.com/user-attachments/assets/5157ef21-ba25-4731-a0dd-7dd95d02dfb2" width="250" />
+  <img src="https://github.com/user-attachments/assets/39d4e097-ca9b-4373-8990-d7f05320a85d" width="250" />
+</p>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/da754549-d118-4735-8fe7-64ceea6e9c80" width="250" />
+  <img src="https://github.com/user-attachments/assets/1bd35e3a-8b47-4351-bbfc-f2bd4796a87f" width="250" />
+</p>
 
 ## Installation
 
