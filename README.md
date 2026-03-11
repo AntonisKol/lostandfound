@@ -43,7 +43,7 @@ Some features (lost items, chat, notifications) are planned but not yet implemen
 ![IMG_0030](https://github.com/user-attachments/assets/b7a1bc1e-b448-42be-8c5c-e3818c85b1af)
 ![IMG_0031](https://github.com/user-attachments/assets/51084e88-442d-4212-bfd2-a1e4410c9b9f)
 ![IMG_0032](https://github.com/user-attachments/assets/68ad00c8-abd0-4b96-aa64-ccc076d47d1d)
-![IMG_9865](https://github.com/user-attachments/assets/eaadd735-7361-4497-abb3-2849911e0e93)
+<img width="585" height="1266" alt="IMG_0033" src="https://github.com/user-attachments/assets/d168a26b-8229-4c93-9b58-c8924107a561" />
 
 
 ## Installation
