@@ -15,6 +15,25 @@ Fundstück is a mobile app for reporting and finding lost and found items. Users
 - Chat feature (planned)
 - Notifications for items in your area (planned)
 
+## Tech Stack
+
+Frontend: React Native (Expo), React Navigation, FlatList, ScrollView, Pressable
+
+Backend / Database: Supabase (Postgres, Realtime, Auth)
+
+Image Uploads: Cloudinary
+
+Geocoding / Maps: OpenStreetMap Nominatim API, react-native-maps
+
+Styling: React Native StyleSheet with grey-themed palette
+
+Dev Tools: Expo CLI, GitHub, Hermes JS engine
+
+## Notes
+
+This project is actively under development.
+
+Some features (lost items, chat, notifications) are planned but not yet implemented.
 
 ## Screenshots
 ![IMG_0026](https://github.com/user-attachments/assets/310e40b0-2791-404e-b0a8-67252cbc525a)
@@ -23,6 +42,8 @@ Fundstück is a mobile app for reporting and finding lost and found items. Users
 ![IMG_0029](https://github.com/user-attachments/assets/cc655f17-7cb2-4bb7-9641-b85e5bbd9af9)
 ![IMG_0030](https://github.com/user-attachments/assets/b7a1bc1e-b448-42be-8c5c-e3818c85b1af)
 ![IMG_0031](https://github.com/user-attachments/assets/51084e88-442d-4212-bfd2-a1e4410c9b9f)
+![IMG_0032](https://github.com/user-attachments/assets/68ad00c8-abd0-4b96-aa64-ccc076d47d1d)
+![IMG_9865](https://github.com/user-attachments/assets/eaadd735-7361-4497-abb3-2849911e0e93)
 
 
 ## Installation
@@ -30,6 +51,10 @@ Fundstück is a mobile app for reporting and finding lost and found items. Users
 ```bash
 git clone <repo-url>
 cd lostandfound-app
-npm install
-npx expo start
-```
+npm install          # install dependencies
+npx expo start       # start the Expo development server
+
+
+
+
+ 
