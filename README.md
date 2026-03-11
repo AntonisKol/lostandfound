@@ -42,7 +42,6 @@ Some features (lost items, chat, notifications) are planned but not yet implemen
 </p>
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/da754549-d118-4735-8fe7-64ceea6e9c80" width="250" />
   <img src="https://github.com/user-attachments/assets/1bd35e3a-8b47-4351-bbfc-f2bd4796a87f" width="250" />  
   <img src="https://github.com/user-attachments/assets/9f07fcae-c2b0-4738-ad3f-309ed2ef736a" width="250" />
 </p>
