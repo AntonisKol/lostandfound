@@ -17,14 +17,13 @@ Fundstück is a mobile app for reporting and finding lost and found items. Users
 
 
 ## Screenshots
-
-![IMG_0031](https://github.com/user-attachments/assets/51084e88-442d-4212-bfd2-a1e4410c9b9f)
-![IMG_0030](https://github.com/user-attachments/assets/b7a1bc1e-b448-42be-8c5c-e3818c85b1af)
-![IMG_0029](https://github.com/user-attachments/assets/cc655f17-7cb2-4bb7-9641-b85e5bbd9af9)
-![IMG_0028](https://github.com/user-attachments/assets/cecd5e3d-f8e8-4664-862e-e61df08cc35d)
-
-![IMG_0027](https://github.com/user-attachments/assets/4ce9c8e6-8e73-4376-b562-5c3edc57b9cc)
 ![IMG_0026](https://github.com/user-attachments/assets/310e40b0-2791-404e-b0a8-67252cbc525a)
+![IMG_0027](https://github.com/user-attachments/assets/4ce9c8e6-8e73-4376-b562-5c3edc57b9cc)
+![IMG_0028](https://github.com/user-attachments/assets/cecd5e3d-f8e8-4664-862e-e61df08cc35d)
+![IMG_0029](https://github.com/user-attachments/assets/cc655f17-7cb2-4bb7-9641-b85e5bbd9af9)
+![IMG_0030](https://github.com/user-attachments/assets/b7a1bc1e-b448-42be-8c5c-e3818c85b1af)
+![IMG_0031](https://github.com/user-attachments/assets/51084e88-442d-4212-bfd2-a1e4410c9b9f)
+
 
 ## Installation
 
