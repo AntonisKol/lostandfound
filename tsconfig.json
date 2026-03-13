@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es2017",
     "module": "NodeNext",
-    "jsx": "react",
+    "jsx": "react-jsx",
     "strict": true,
     "moduleResolution": "NodeNext",
     "allowSyntheticDefaultImports": true,
