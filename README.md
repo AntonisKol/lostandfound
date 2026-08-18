@@ -7,10 +7,10 @@ Fundstück is a mobile app for reporting and finding lost and found items. Users
 ## Features
 
 - Post found items with image, category, location, and notes
-- Browse found items in a feed
-- View items on a map
+- Post lost items with image, category, location, and description
+- Browse found and lost items in a feed
+- View found and lost items on a map
 - Mark items as returned/found (planned)
-- Post lost items (planned)
 - User accounts with email, password, and zip code (planned)
 - Chat feature (planned)
 - Notifications for items in your area (planned)
@@ -19,9 +19,9 @@ Fundstück is a mobile app for reporting and finding lost and found items. Users
 
 Frontend: React Native (Expo), React Navigation, FlatList, ScrollView, Pressable
 
-Backend / Database: Supabase (Postgres, Realtime, Auth)
+Backend / Database: Supabase (Postgres, Realtime, Auth, Storage)
 
-Image Uploads: Cloudinary
+Image Uploads: Supabase Storage
 
 Geocoding / Maps: OpenStreetMap Nominatim API, react-native-maps
 
@@ -33,7 +33,7 @@ Dev Tools: Expo CLI, GitHub, Hermes JS engine
 
 This project is actively under development.
 
-Some features (lost items, chat, notifications) are planned but not yet implemented.
+Some features (claiming items, chat, notifications) are planned but not yet implemented.
 
 ## Screenshots
 <p align="center">

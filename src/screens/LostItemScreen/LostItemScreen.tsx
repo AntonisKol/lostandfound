@@ -17,7 +17,7 @@ import { BlurView } from "expo-blur";
 import * as ImagePicker from "expo-image-picker";
 import { styles } from "./styled";
 import { useNavigation } from "@react-navigation/native";
-import { uploadImageToCloudinary } from "../../utils/cloudinary";
+import { uploadImage } from "../../utils/storage";
 import { fetchCoordinates } from "../../utils/geocode";
 import { supabase } from "../../supabase/supabase";
 import { CATEGORIES } from "../../constants/categories";
@@ -75,7 +75,7 @@ const LostItemScreen = () => {
       const uri = result.assets[0].uri;
       setImageUri(uri);
       setUploading(true);
-      const url = await uploadImageToCloudinary(uri);
+      const url = await uploadImage(uri);
       setUploading(false);
       if (url) setUploadedUrl(url);
       else Alert.alert("Error", "Upload failed");
