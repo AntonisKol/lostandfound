@@ -5,6 +5,8 @@ import { supabase } from "../../supabase/supabase";
 import { useNavigation } from "@react-navigation/native";
 import { styles } from "./styled";
 
+type ItemType = "found" | "lost";
+
 interface Item {
   id: string;
   image_url?: string;
@@ -12,10 +14,18 @@ interface Item {
   location: string;
   notes?: string;
   created_at: string;
-  type: "found";
+  type: ItemType;
   latitude: number;
   longitude: number;
 }
+
+const formatItems = (data: any[] | null, type: ItemType): Item[] =>
+  (data || []).map((item) => ({
+    ...item,
+    type,
+    latitude: item.latitude ? parseFloat(item.latitude) : 52.5200, // fallback Berlin
+    longitude: item.longitude ? parseFloat(item.longitude) : 13.4050,
+  }));
 
 const MapScreen = () => {
   const [items, setItems] = useState<Item[]>([]);
@@ -25,25 +35,24 @@ const MapScreen = () => {
   const fetchItems = async () => {
     setLoading(true);
 
-    const { data, error } = await supabase
-      .from("found_items")
-      .select("*");
+    const [foundRes, lostRes] = await Promise.all([
+      supabase.from("found_items").select("*"),
+      supabase.from("lost_items").select("*"),
+    ]);
 
-    if (error) {
-      console.log("Error fetching found items:", error);
-      Alert.alert("Error fetching items", error.message);
-      setLoading(false);
-      return;
+    if (foundRes.error) {
+      console.log("Error fetching found items:", foundRes.error);
+      Alert.alert("Error fetching items", foundRes.error.message);
+    }
+    if (lostRes.error) {
+      console.log("Error fetching lost items:", lostRes.error);
+      Alert.alert("Error fetching items", lostRes.error.message);
     }
 
-    const formattedItems: Item[] = (data || []).map((item: any) => ({
-      ...item,
-      type: "found",
-      latitude: item.latitude ? parseFloat(item.latitude) : 52.5200, // fallback Berlin
-      longitude: item.longitude ? parseFloat(item.longitude) : 13.4050,
-    }));
-
-    setItems(formattedItems);
+    setItems([
+      ...formatItems(foundRes.data, "found"),
+      ...formatItems(lostRes.data, "lost"),
+    ]);
     setLoading(false);
   };
 
@@ -51,10 +60,15 @@ const MapScreen = () => {
     fetchItems();
 
     const channel = supabase
-      .channel("found_items_changes")
+      .channel("map_items_changes")
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "found_items" },
+        () => fetchItems()
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "lost_items" },
         () => fetchItems()
       )
       .subscribe();
@@ -78,14 +92,16 @@ const MapScreen = () => {
     >
       {items.map((item) => (
         <Marker
-          key={item.id}
+          key={`${item.type}-${item.id}`}
           coordinate={{ latitude: item.latitude, longitude: item.longitude }}
-          pinColor="yellow"
-          onPress={() => navigation.navigate("FoundItemDetails", { ...item })}
+          pinColor={item.type === "found" ? "gold" : "red"}
+          onPress={() => navigation.navigate("ItemDetails", { ...item })}
         >
           <Callout>
             <View style={{ maxWidth: 200 }}>
-              <Text style={{ fontWeight: "700" }}>{item.category || "Other"}</Text>
+              <Text style={{ fontWeight: "700" }}>
+                {item.type === "found" ? "Found" : "Lost"} · {item.category || "Other"}
+              </Text>
               <Text>{item.location}</Text>
               {item.notes ? <Text>{item.notes}</Text> : null}
             </View>

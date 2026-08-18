@@ -34,6 +34,25 @@ export const styles = StyleSheet.create({
     height: 80,
     borderRadius: 12,
   },
+  badge: {
+    alignSelf: "flex-start",
+    paddingHorizontal: 10,
+    paddingVertical: 2,
+    borderRadius: 12,
+    marginBottom: 4,
+  },
+  badgeFound: {
+    backgroundColor: "#618071ff",
+  },
+  badgeLost: {
+    backgroundColor: "#FF4C4C",
+  },
+  badgeText: {
+    color: "white",
+    fontSize: 11,
+    fontWeight: "700",
+    letterSpacing: 0.5,
+  },
   category: {
     fontWeight: "700",
     fontSize: 16,

@@ -12,19 +12,25 @@ import {
 import { supabase } from "../../supabase/supabase";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { CATEGORIES as ITEM_CATEGORIES } from "../../constants/categories";
 import { styles } from "./styled";
-interface FoundItem {
+
+type ItemType = "found" | "lost";
+
+interface FeedItem {
   id: string;
   image_url: string | null;
   category: string | null;
   location: string;
   notes?: string;
   created_at: string;
+  type: ItemType;
 }
 
 type RootStackParamList = {
-  FoundItemDetails: {
+  ItemDetails: {
     id: string;
+    type: ItemType;
     image_url: string | null;
     category: string;
     location: string;
@@ -33,41 +39,41 @@ type RootStackParamList = {
   };
 };
 
-const CATEGORIES = [
-  "All",
-  "Phone",
-  "Wallet",
-  "Keys",
-  "Bag / Backpack",
-  "Clothing",
-  "Jewelry",
-  "Electronics",
-  "Documents",
-  "Glasses",
-  "Other",
+const CATEGORIES = ["All", ...ITEM_CATEGORIES];
+
+const TYPES: { label: string; value: "All" | ItemType }[] = [
+  { label: "All", value: "All" },
+  { label: "Found", value: "found" },
+  { label: "Lost", value: "lost" },
 ];
 
 const FoundItemsFeed = () => {
-  const [items, setItems] = useState<FoundItem[]>([]);
+  const [items, setItems] = useState<FeedItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedType, setSelectedType] = useState<"All" | ItemType>("All");
 
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const fetchItems = async () => {
     setLoading(true);
 
-    const { data, error } = await supabase
-      .from("found_items")
-      .select("*")
-      .order("created_at", { ascending: false });
+    const [foundRes, lostRes] = await Promise.all([
+      supabase.from("found_items").select("*").order("created_at", { ascending: false }),
+      supabase.from("lost_items").select("*").order("created_at", { ascending: false }),
+    ]);
 
-    if (error) {
-      console.log(error);
-    } else {
-      setItems(data as FoundItem[]);
-    }
+    if (foundRes.error) console.log(foundRes.error);
+    if (lostRes.error) console.log(lostRes.error);
 
+    const found: FeedItem[] = (foundRes.data || []).map((item: any) => ({ ...item, type: "found" }));
+    const lost: FeedItem[] = (lostRes.data || []).map((item: any) => ({ ...item, type: "lost" }));
+
+    const merged = [...found, ...lost].sort(
+      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    );
+
+    setItems(merged);
     setLoading(false);
   };
 
@@ -75,12 +81,9 @@ const FoundItemsFeed = () => {
     fetchItems();
 
     const channel = supabase
-      .channel("found_items_changes")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "found_items" },
-        () => fetchItems()
-      )
+      .channel("items_changes")
+      .on("postgres_changes", { event: "*", schema: "public", table: "found_items" }, () => fetchItems())
+      .on("postgres_changes", { event: "*", schema: "public", table: "lost_items" }, () => fetchItems())
       .subscribe();
 
     return () => {
@@ -89,18 +92,23 @@ const FoundItemsFeed = () => {
   }, []);
 
   const filteredItems = useMemo(() => {
-    if (selectedCategory === "All") return items;
-    return items.filter((item) => (item.category?.trim() || "Other") === selectedCategory);
-  }, [items, selectedCategory]);
+    return items.filter((item) => {
+      const matchesType = selectedType === "All" || item.type === selectedType;
+      const matchesCategory =
+        selectedCategory === "All" || (item.category?.trim() || "Other") === selectedCategory;
+      return matchesType && matchesCategory;
+    });
+  }, [items, selectedCategory, selectedType]);
 
-  const renderItem = ({ item }: { item: FoundItem }) => {
+  const renderItem = ({ item }: { item: FeedItem }) => {
     const realCategory = item.category?.trim() || "Other";
 
     return (
       <Pressable
         style={styles.item}
-        onPress={() => navigation.navigate("FoundItemDetails", {
+        onPress={() => navigation.navigate("ItemDetails", {
           id: item.id,
+          type: item.type,
           image_url: item.image_url,
           category: realCategory,
           location: item.location,
@@ -110,6 +118,9 @@ const FoundItemsFeed = () => {
       >
         {item.image_url && <Image source={{ uri: item.image_url }} style={styles.image} />}
         <View style={{ flex: 1, marginLeft: 12 }}>
+          <View style={[styles.badge, item.type === "found" ? styles.badgeFound : styles.badgeLost]}>
+            <Text style={styles.badgeText}>{item.type === "found" ? "FOUND" : "LOST"}</Text>
+          </View>
           <Text style={styles.category}>{realCategory}</Text>
           <Text style={styles.location}>{item.location}</Text>
           {item.notes ? <Text style={styles.notes}>{item.notes}</Text> : null}
@@ -124,36 +135,63 @@ const FoundItemsFeed = () => {
   return (
     <FlatList
       data={filteredItems}
-      keyExtractor={(item) => item.id}
+      keyExtractor={(item) => `${item.type}-${item.id}`}
       renderItem={renderItem}
       contentContainerStyle={{ padding: 16, paddingTop: 60, paddingBottom: 120 }}
       ListEmptyComponent={<Text>No items found yet.</Text>}
       ListHeaderComponent={
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={styles.categories}
-        >
-          {CATEGORIES.map((category) => (
-            <TouchableOpacity
-              key={category}
-              onPress={() => setSelectedCategory(category)}
-              style={[
-                styles.categoryButton,
-                selectedCategory === category && styles.categoryButtonActive,
-              ]}
-            >
-              <Text
+        <>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={styles.categories}
+          >
+            {TYPES.map((t) => (
+              <TouchableOpacity
+                key={t.value}
+                onPress={() => setSelectedType(t.value)}
                 style={[
-                  styles.categoryText,
-                  selectedCategory === category && styles.categoryTextActive,
+                  styles.categoryButton,
+                  selectedType === t.value && styles.categoryButtonActive,
                 ]}
               >
-                {category}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
+                <Text
+                  style={[
+                    styles.categoryText,
+                    selectedType === t.value && styles.categoryTextActive,
+                  ]}
+                >
+                  {t.label}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={styles.categories}
+          >
+            {CATEGORIES.map((category) => (
+              <TouchableOpacity
+                key={category}
+                onPress={() => setSelectedCategory(category)}
+                style={[
+                  styles.categoryButton,
+                  selectedCategory === category && styles.categoryButtonActive,
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.categoryText,
+                    selectedCategory === category && styles.categoryTextActive,
+                  ]}
+                >
+                  {category}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </>
       }
     />
   );
