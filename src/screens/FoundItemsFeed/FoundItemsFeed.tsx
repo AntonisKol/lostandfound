@@ -10,7 +10,7 @@ import {
   Pressable,
 } from "react-native";
 import { supabase } from "../../supabase/supabase";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, StackActions } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { CATEGORIES as ITEM_CATEGORIES } from "../../constants/categories";
 import { styles } from "./styled";
@@ -106,7 +106,7 @@ const FoundItemsFeed = () => {
     return (
       <Pressable
         style={styles.item}
-        onPress={() => navigation.navigate("ItemDetails", {
+        onPress={() => navigation.dispatch(StackActions.push("ItemDetails", {
           id: item.id,
           type: item.type,
           image_url: item.image_url,
@@ -114,7 +114,7 @@ const FoundItemsFeed = () => {
           location: item.location,
           notes: item.notes,
           created_at: item.created_at,
-        })}
+        }))}
       >
         {item.image_url && <Image source={{ uri: item.image_url }} style={styles.image} />}
         <View style={{ flex: 1, marginLeft: 12 }}>

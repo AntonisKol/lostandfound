@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { View, ActivityIndicator, Alert, Text, Modal, Pressable, FlatList } from "react-native";
 import MapView, { Marker, Callout } from "react-native-maps";
 import { supabase } from "../../supabase/supabase";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, StackActions } from "@react-navigation/native";
 import { styles } from "./styled";
 
 type ItemType = "found" | "lost";
@@ -115,7 +115,7 @@ const MapScreen = () => {
                 key={key}
                 coordinate={{ latitude: first.latitude, longitude: first.longitude }}
                 pinColor={first.type === "found" ? "gold" : "red"}
-                onPress={() => navigation.navigate("ItemDetails", { ...first })}
+                onPress={() => navigation.dispatch(StackActions.push("ItemDetails", { ...first }))}
               >
                 <Callout>
                   <View style={{ maxWidth: 200 }}>
@@ -161,7 +161,7 @@ const MapScreen = () => {
                 style={styles.modalRow}
                 onPress={() => {
                   setSelectedGroup(null);
-                  navigation.navigate("ItemDetails", { ...item });
+                  navigation.dispatch(StackActions.push("ItemDetails", { ...item }));
                 }}
               >
                 <View
