@@ -12,11 +12,7 @@ const Stack = createNativeStackNavigator();
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Landing" component={LandingPage} />
       <Stack.Screen name="MainTabs" component={TabNavigator} />
-      <Stack.Screen
-        name="ItemDetails"
-        component={ItemDetailsScreen}
-        options={{ headerShown: true, title: "Item Details" }}
-      />
+      <Stack.Screen name="ItemDetails" component={ItemDetailsScreen} />
     </Stack.Navigator>
   </NavigationContainer>
   );

@@ -1,5 +1,5 @@
-import { Text, Image, ScrollView, Button, View, Alert } from "react-native";
-import { useRoute } from "@react-navigation/native";
+import { Text, Image, ScrollView, Button, View, Alert, Pressable } from "react-native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { styles } from "./styled";
 import React from "react";
 
@@ -19,6 +19,7 @@ type RootStackParamList = {
 
 const ItemDetailsScreen = () => {
   const route = useRoute();
+  const navigation = useNavigation();
   const { type, image_url, category, location, notes } =
     route.params as RootStackParamList["ItemDetails"];
 
@@ -26,6 +27,14 @@ const ItemDetailsScreen = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <View style={styles.topBar}>
+        <Pressable onPress={() => navigation.goBack()} hitSlop={12}>
+          <Text style={styles.backText}>‹ Back</Text>
+        </Pressable>
+        <Text style={styles.topBarTitle}>Item Details</Text>
+        <View style={styles.topBarSpacer} />
+      </View>
+
       <View style={[styles.badge, isFound ? styles.badgeFound : styles.badgeLost]}>
         <Text style={styles.badgeText}>{isFound ? "FOUND" : "LOST"}</Text>
       </View>
