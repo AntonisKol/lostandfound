@@ -18,24 +18,10 @@ import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
 import * as ImagePicker from "expo-image-picker";
 import { uploadImageToCloudinary } from "../../utils/cloudinary";
+import { fetchCoordinates } from "../../utils/geocode";
 import { supabase } from "../../supabase/supabase";
+import { CATEGORIES } from "../../constants/categories";
 import { styles } from "./styled";
-
-// @TODO: Move to constants file
-// @TODO: Rivise Funcionality
-
-const CATEGORIES = [
-  "Phone",
-  "Wallet",
-  "Keys",
-  "Bag / Backpack",
-  "Clothing",
-  "Jewelry",
-  "Electronics",
-  "Documents",
-  "Glasses",
-  "Other",
-];
 
 const FoundItemScreen = () => {
   const [imageUri, setImageUri] = useState<string | null>(null);
@@ -91,24 +77,6 @@ const FoundItemScreen = () => {
       { text: "Library", onPress: () => pickImage(false) },
       { text: "Cancel", style: "cancel" },
     ]);
-  };
-
-  // Get coordinates from ZIP code
-  const fetchCoordinates = async (zip: string) => {
-    try {
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?postalcode=${zip}&country=Germany&format=json&limit=1`
-      );
-      const data = await response.json();
-      if (data.length > 0) {
-        return { latitude: parseFloat(data[0].lat), longitude: parseFloat(data[0].lon) };
-      } else {
-        return { latitude: 52.5200, longitude: 13.4050 }; // fallback Berlin
-      }
-    } catch (error) {
-      console.error("Error fetching coordinates:", error);
-      return { latitude: 52.5200, longitude: 13.4050 };
-    }
   };
 
   const saveItem = async () => {

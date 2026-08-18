@@ -16,25 +16,17 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
 import * as ImagePicker from "expo-image-picker";
-import { styles } from "./styled";  
+import { styles } from "./styled";
 import { useNavigation } from "@react-navigation/native";
+import { uploadImageToCloudinary } from "../../utils/cloudinary";
+import { fetchCoordinates } from "../../utils/geocode";
+import { supabase } from "../../supabase/supabase";
+import { CATEGORIES } from "../../constants/categories";
 
-const CATEGORIES = [
-  "Phone",
-  "Wallet",
-  "Keys",
-  "Bag / Backpack",
-  "Clothing",
-  "Jewelry",
-  "Electronics",
-  "Documents",
-  "Glasses",
-  "Other",
-];
-
-const LostItemScreen = () => {  
+const LostItemScreen = () => {
   const navigation = useNavigation();
   const [imageUri, setImageUri] = useState<string | null>(null);
+  const [uploadedUrl, setUploadedUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
 
   const [category, setCategory] = useState("Other");
@@ -80,7 +72,13 @@ const LostItemScreen = () => {
     });
 
     if (!result.canceled && result.assets.length > 0) {
-      setImageUri(result.assets[0].uri);
+      const uri = result.assets[0].uri;
+      setImageUri(uri);
+      setUploading(true);
+      const url = await uploadImageToCloudinary(uri);
+      setUploading(false);
+      if (url) setUploadedUrl(url);
+      else Alert.alert("Error", "Upload failed");
     }
   };
 
@@ -92,14 +90,32 @@ const LostItemScreen = () => {
       return;
     }
 
-    // @TODO: Save lost item to backend and add to feed
-    Alert.alert("Success", "Lost item saved locally (frontend only).");
+    setUploading(true);
+    const coords = await fetchCoordinates(location);
+
+    const { error } = await supabase.from("lost_items").insert([{
+      image_url: uploadedUrl,
+      category,
+      location,
+      notes,
+      latitude: coords.latitude,
+      longitude: coords.longitude,
+    }]);
+    setUploading(false);
+
+    if (error) {
+      Alert.alert("Error", error.message);
+      return;
+    }
+
+    Alert.alert("Success", "Lost item saved!");
     setImageUri(null);
+    setUploadedUrl(null);
     setCategory("Other");
     setLocation("");
     setNotes("");
-    setErrors({});      
-    navigation.navigate("Feed");  
+    setErrors({});
+    navigation.navigate("Feed");
   };
 
   const renderCategoryChip = (cat: string) => {
