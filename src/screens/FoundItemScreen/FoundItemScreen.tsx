@@ -6,7 +6,6 @@ import {
   Alert,
   TextInput,
   Keyboard,
-  TouchableWithoutFeedback,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -21,6 +20,7 @@ import { uploadImageToCloudinary } from "../../utils/cloudinary";
 import { fetchCoordinates } from "../../utils/geocode";
 import { supabase } from "../../supabase/supabase";
 import { CATEGORIES } from "../../constants/categories";
+import DismissKeyboardOnTap from "../../components/DismissKeyboardOnTap";
 import { styles } from "./styled";
 
 const FoundItemScreen = () => {
@@ -134,7 +134,7 @@ const FoundItemScreen = () => {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+    <DismissKeyboardOnTap>
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === "ios" ? "padding" : undefined}>
         <ScrollView contentContainerStyle={styles.page}>
           <BlurView intensity={30} tint="light" style={styles.card}>
@@ -192,7 +192,7 @@ const FoundItemScreen = () => {
           </BlurView>
         </ScrollView>
       </KeyboardAvoidingView>
-    </TouchableWithoutFeedback>
+    </DismissKeyboardOnTap>
   );
 };
 

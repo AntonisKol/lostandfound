@@ -6,7 +6,6 @@ import {
   Alert,
   TextInput,
   Keyboard,
-  TouchableWithoutFeedback,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -22,6 +21,7 @@ import { uploadImageToCloudinary } from "../../utils/cloudinary";
 import { fetchCoordinates } from "../../utils/geocode";
 import { supabase } from "../../supabase/supabase";
 import { CATEGORIES } from "../../constants/categories";
+import DismissKeyboardOnTap from "../../components/DismissKeyboardOnTap";
 
 const LostItemScreen = () => {
   const navigation = useNavigation();
@@ -136,7 +136,7 @@ const LostItemScreen = () => {
 
   
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+    <DismissKeyboardOnTap>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
@@ -215,7 +215,7 @@ const LostItemScreen = () => {
           </BlurView>
         </ScrollView>
       </KeyboardAvoidingView>
-    </TouchableWithoutFeedback>
+    </DismissKeyboardOnTap>
   );
 };
 
