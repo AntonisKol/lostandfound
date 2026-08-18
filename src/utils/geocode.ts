@@ -8,7 +8,8 @@ const FALLBACK_COORDS: Coordinates = { latitude: 52.52, longitude: 13.405 }; // 
 export const fetchCoordinates = async (zip: string): Promise<Coordinates> => {
   try {
     const response = await fetch(
-      `https://nominatim.openstreetmap.org/search?postalcode=${encodeURIComponent(zip)}&country=Germany&format=json&limit=1`
+      `https://nominatim.openstreetmap.org/search?postalcode=${encodeURIComponent(zip)}&country=Germany&format=json&limit=1`,
+      { headers: { "User-Agent": "FundstuckLostAndFoundApp/1.0" } }
     );
     const data = await response.json();
     if (data.length > 0) {
