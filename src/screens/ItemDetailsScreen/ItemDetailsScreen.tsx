@@ -1,4 +1,4 @@
-import { Text, Image, ScrollView, Button, View } from "react-native";
+import { Text, Image, ScrollView, Button, View, Alert } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { styles } from "./styled";
 import React from "react";
@@ -47,7 +47,7 @@ const ItemDetailsScreen = () => {
 
       <Button
         title={isFound ? "Claim / Contact Finder" : "This is mine / Contact reporter"}
-        onPress={() => alert("Feature coming soon!")}
+        onPress={() => Alert.alert("Coming soon", "This feature isn't available yet.")}
       />
     </ScrollView>
   );

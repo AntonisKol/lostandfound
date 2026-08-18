@@ -21,6 +21,7 @@ import { fetchCoordinates } from "../../utils/geocode";
 import { supabase } from "../../supabase/supabase";
 import { CATEGORIES } from "../../constants/categories";
 import DismissKeyboardOnTap from "../../components/DismissKeyboardOnTap";
+import ZipCodePicker from "../../components/ZipCodePicker";
 import { styles } from "./styled";
 
 const FoundItemScreen = () => {
@@ -33,7 +34,6 @@ const FoundItemScreen = () => {
   const [notes, setNotes] = useState("");
   const [errors, setErrors] = useState<{ category?: boolean; location?: boolean }>({});
 
-  const locationRef = useRef<TextInput>(null);
   const notesRef = useRef<TextInput>(null);
   const navigation = useNavigation();
 
@@ -159,15 +159,11 @@ const FoundItemScreen = () => {
             </View>
 
             <View style={styles.formGroup}>
-              <Text style={styles.label}>Exact Location Found*</Text>
-              <TextInput
-                ref={locationRef}
+              <Text style={styles.label}>ZIP Code Found*</Text>
+              <ZipCodePicker
                 style={[styles.input, errors.location && styles.errorInput]}
-                placeholder="Street name, shop name, metro, etc."
                 value={location}
-                onChangeText={text => { setLocation(text); if (errors.location) setErrors(prev => ({ ...prev, location: false })); }}
-                returnKeyType="next"
-                onSubmitEditing={() => notesRef.current?.focus()}
+                onChange={zip => { setLocation(zip); if (errors.location) setErrors(prev => ({ ...prev, location: false })); }}
               />
             </View>
 

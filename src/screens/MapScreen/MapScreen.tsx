@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { View, ActivityIndicator, StyleSheet, Alert, Text } from "react-native";
+import React, { useEffect, useMemo, useState } from "react";
+import { View, ActivityIndicator, Alert, Text, Modal, Pressable, FlatList } from "react-native";
 import MapView, { Marker, Callout } from "react-native-maps";
 import { supabase } from "../../supabase/supabase";
 import { useNavigation } from "@react-navigation/native";
@@ -30,6 +30,7 @@ const formatItems = (data: any[] | null, type: ItemType): Item[] =>
 const MapScreen = () => {
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedGroup, setSelectedGroup] = useState<Item[] | null>(null);
   const navigation = useNavigation();
 
   const fetchItems = async () => {
@@ -78,40 +79,112 @@ const MapScreen = () => {
     };
   }, []);
 
+  // Items are geocoded from their ZIP code, so items sharing a ZIP land on
+  // (near enough) the same coordinate. Group by ZIP so the map shows one
+  // pin per ZIP instead of stacked, indistinguishable markers.
+  const groupedByZip = useMemo(() => {
+    const map = new Map<string, Item[]>();
+    items.forEach((item) => {
+      const key = item.location || `${item.latitude},${item.longitude}`;
+      if (!map.has(key)) map.set(key, []);
+      map.get(key)!.push(item);
+    });
+    return Array.from(map.values());
+  }, [items]);
+
   if (loading) return <ActivityIndicator size="large" style={{ marginTop: 40 }} />;
 
   return (
-    <MapView
-      style={styles.map}
-      initialRegion={{
-        latitude: items[0]?.latitude || 52.5200,
-        longitude: items[0]?.longitude || 13.4050,
-        latitudeDelta: 0.1,
-        longitudeDelta: 0.1,
-      }}
-    >
-      {items.map((item) => (
-        <Marker
-          key={`${item.type}-${item.id}`}
-          coordinate={{ latitude: item.latitude, longitude: item.longitude }}
-          pinColor={item.type === "found" ? "gold" : "red"}
-          onPress={() => navigation.navigate("ItemDetails", { ...item })}
-        >
-          <Callout>
-            <View style={{ maxWidth: 200 }}>
-              <Text style={{ fontWeight: "700" }}>
-                {item.type === "found" ? "Found" : "Lost"} · {item.category || "Other"}
-              </Text>
-              <Text>{item.location}</Text>
-              {item.notes ? <Text>{item.notes}</Text> : null}
-            </View>
-          </Callout>
-        </Marker>
-      ))}
-    </MapView>
+    <>
+      <MapView
+        style={styles.map}
+        initialRegion={{
+          latitude: items[0]?.latitude || 52.5200,
+          longitude: items[0]?.longitude || 13.4050,
+          latitudeDelta: 0.1,
+          longitudeDelta: 0.1,
+        }}
+      >
+        {groupedByZip.map((group) => {
+          const first = group[0];
+          const key = `${first.location}-${first.id}`;
+
+          if (group.length === 1) {
+            return (
+              <Marker
+                key={key}
+                coordinate={{ latitude: first.latitude, longitude: first.longitude }}
+                pinColor={first.type === "found" ? "gold" : "red"}
+                onPress={() => navigation.navigate("ItemDetails", { ...first })}
+              >
+                <Callout>
+                  <View style={{ maxWidth: 200 }}>
+                    <Text style={{ fontWeight: "700" }}>
+                      {first.type === "found" ? "Found" : "Lost"} · {first.category || "Other"}
+                    </Text>
+                    <Text>{first.location}</Text>
+                    {first.notes ? <Text>{first.notes}</Text> : null}
+                  </View>
+                </Callout>
+              </Marker>
+            );
+          }
+
+          return (
+            <Marker
+              key={key}
+              coordinate={{ latitude: first.latitude, longitude: first.longitude }}
+              onPress={() => setSelectedGroup(group)}
+            >
+              <View style={styles.clusterBadge}>
+                <Text style={styles.clusterBadgeText}>{group.length}</Text>
+              </View>
+            </Marker>
+          );
+        })}
+      </MapView>
+
+      <Modal
+        visible={!!selectedGroup}
+        animationType="slide"
+        onRequestClose={() => setSelectedGroup(null)}
+      >
+        <View style={styles.modal}>
+          <Text style={styles.modalTitle}>
+            ZIP {selectedGroup?.[0]?.location} · {selectedGroup?.length} items
+          </Text>
+          <FlatList
+            data={selectedGroup || []}
+            keyExtractor={(item) => `${item.type}-${item.id}`}
+            renderItem={({ item }) => (
+              <Pressable
+                style={styles.modalRow}
+                onPress={() => {
+                  setSelectedGroup(null);
+                  navigation.navigate("ItemDetails", { ...item });
+                }}
+              >
+                <View
+                  style={[
+                    styles.modalRowBadge,
+                    item.type === "found" ? styles.modalRowBadgeFound : styles.modalRowBadgeLost,
+                  ]}
+                >
+                  <Text style={styles.modalRowBadgeText}>
+                    {item.type === "found" ? "FOUND" : "LOST"}
+                  </Text>
+                </View>
+                <Text style={styles.modalRowCategory}>{item.category || "Other"}</Text>
+              </Pressable>
+            )}
+          />
+          <Pressable style={styles.modalClose} onPress={() => setSelectedGroup(null)}>
+            <Text style={styles.modalCloseText}>Close</Text>
+          </Pressable>
+        </View>
+      </Modal>
+    </>
   );
 };
-
- 
 
 export default MapScreen;
