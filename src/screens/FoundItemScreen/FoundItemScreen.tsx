@@ -72,6 +72,13 @@ const FoundItemScreen = () => {
   };
 
   const pickImageOption = () => {
+    // Alert.alert with a button list doesn't render on web, so the
+    // Camera/Library choice would silently do nothing there.
+    if (Platform.OS === "web") {
+      pickImage(false);
+      return;
+    }
+
     Alert.alert("Add Photo", "Choose an option", [
       { text: "Camera", onPress: () => pickImage(true) },
       { text: "Library", onPress: () => pickImage(false) },
