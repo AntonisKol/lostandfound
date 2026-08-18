@@ -22,9 +22,12 @@ import { supabase } from "../../supabase/supabase";
 import { CATEGORIES } from "../../constants/categories";
 import DismissKeyboardOnTap from "../../components/DismissKeyboardOnTap";
 import ZipCodePicker from "../../components/ZipCodePicker";
+import RequireAuthPrompt from "../../components/RequireAuthPrompt";
+import { useAuth } from "../../context/AuthContext";
 import { styles } from "./styled";
 
 const FoundItemScreen = () => {
+  const { session } = useAuth();
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [uploadedUrl, setUploadedUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -94,10 +97,16 @@ const FoundItemScreen = () => {
       return;
     }
 
+    if (!session) {
+      Alert.alert("Sign in required", "Please sign in to post a found item.");
+      return;
+    }
+
     setUploading(true);
     const coords = await fetchCoordinates(location);
 
     const { error } = await supabase.from("found_items").insert([{
+      user_id: session.user.id,
       image_url: uploadedUrl,
       category,
       location,
@@ -132,6 +141,10 @@ const FoundItemScreen = () => {
       </Pressable>
     );
   };
+
+  if (!session) {
+    return <RequireAuthPrompt message="Sign in to post a found item." />;
+  }
 
   return (
     <DismissKeyboardOnTap>

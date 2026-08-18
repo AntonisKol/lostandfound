@@ -23,8 +23,11 @@ import { supabase } from "../../supabase/supabase";
 import { CATEGORIES } from "../../constants/categories";
 import DismissKeyboardOnTap from "../../components/DismissKeyboardOnTap";
 import ZipCodePicker from "../../components/ZipCodePicker";
+import RequireAuthPrompt from "../../components/RequireAuthPrompt";
+import { useAuth } from "../../context/AuthContext";
 
 const LostItemScreen = () => {
+  const { session } = useAuth();
   const navigation = useNavigation();
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [uploadedUrl, setUploadedUrl] = useState<string | null>(null);
@@ -90,10 +93,16 @@ const LostItemScreen = () => {
       return;
     }
 
+    if (!session) {
+      Alert.alert("Sign in required", "Please sign in to post a lost item.");
+      return;
+    }
+
     setUploading(true);
     const coords = await fetchCoordinates(location);
 
     const { error } = await supabase.from("lost_items").insert([{
+      user_id: session.user.id,
       image_url: uploadedUrl,
       category,
       location,
@@ -134,7 +143,10 @@ const LostItemScreen = () => {
     );
   };
 
-  
+  if (!session) {
+    return <RequireAuthPrompt message="Sign in to post a lost item." />;
+  }
+
   return (
     <DismissKeyboardOnTap>
       <KeyboardAvoidingView
