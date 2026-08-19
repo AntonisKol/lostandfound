@@ -11,6 +11,7 @@ import {
   Pressable,
   ActivityIndicator,
   ScrollView,
+  StyleSheet,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { BlurView } from "expo-blur";
@@ -149,7 +150,9 @@ const FoundItemScreen = () => {
     <DismissKeyboardOnTap>
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === "ios" ? "padding" : undefined}>
         <ScrollView contentContainerStyle={styles.page}>
-          <BlurView intensity={30} tint="light" style={styles.card}>
+          <View style={styles.cardWrapper}>
+          <BlurView intensity={30} tint="light" style={StyleSheet.absoluteFillObject} />
+          <View style={styles.card}>
             <Text style={styles.title}>Found Item</Text>
             <Text style={styles.subtitle}>Post something you found</Text>
 
@@ -195,7 +198,8 @@ const FoundItemScreen = () => {
             <Pressable disabled={uploading} style={styles.saveButton} onPress={saveItem}>
               <Text style={styles.saveText}>Report Found Item</Text>
             </Pressable>
-          </BlurView>
+          </View>
+          </View>
         </ScrollView>
       </KeyboardAvoidingView>
     </DismissKeyboardOnTap>

@@ -10,6 +10,7 @@ import {
   Pressable,
   ActivityIndicator,
   ScrollView,
+  StyleSheet,
 } from "react-native";
 import { BlurView } from "expo-blur";
 import { supabase } from "../../supabase/supabase";
@@ -87,7 +88,9 @@ const AccountScreen = () => {
     const zipCode = session.user.user_metadata?.zip_code;
     return (
       <ScrollView contentContainerStyle={styles.page}>
-        <BlurView intensity={30} tint="light" style={styles.card}>
+        <View style={styles.cardWrapper}>
+        <BlurView intensity={30} tint="light" style={StyleSheet.absoluteFillObject} />
+        <View style={styles.card}>
           <Text style={styles.title}>Account</Text>
           <Text style={styles.subtitle}>You're signed in</Text>
 
@@ -104,7 +107,8 @@ const AccountScreen = () => {
           <Pressable style={styles.signOutButton} onPress={signOut}>
             <Text style={styles.signOutText}>Sign Out</Text>
           </Pressable>
-        </BlurView>
+        </View>
+        </View>
       </ScrollView>
     );
   }
@@ -113,7 +117,9 @@ const AccountScreen = () => {
     <DismissKeyboardOnTap>
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === "ios" ? "padding" : undefined}>
         <ScrollView contentContainerStyle={styles.page}>
-          <BlurView intensity={30} tint="light" style={styles.card}>
+          <View style={styles.cardWrapper}>
+          <BlurView intensity={30} tint="light" style={StyleSheet.absoluteFillObject} />
+          <View style={styles.card}>
             <Text style={styles.title}>{mode === "signIn" ? "Sign In" : "Sign Up"}</Text>
             <Text style={styles.subtitle}>
               {mode === "signIn" ? "Sign in to post found or lost items" : "Create an account to post items"}
@@ -162,7 +168,8 @@ const AccountScreen = () => {
                 {mode === "signIn" ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
               </Text>
             </Pressable>
-          </BlurView>
+          </View>
+          </View>
         </ScrollView>
       </KeyboardAvoidingView>
     </DismissKeyboardOnTap>

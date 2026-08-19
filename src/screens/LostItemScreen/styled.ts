@@ -3,7 +3,10 @@ import { colors } from "../../constants/theme";
 
 export const styles = StyleSheet.create({
   page: { flexGrow: 1, backgroundColor: colors.paper, alignItems: "center", justifyContent: "center", padding: 20 },
-  card: { width: "100%", borderRadius: 24, padding: 24, backgroundColor: "rgba(255,255,255,0.9)" },
+  // BlurView on Android doesn't reliably clip to its own borderRadius, so
+  // the radius + clipping live on this plain wrapper instead.
+  cardWrapper: { width: "100%", borderRadius: 24, overflow: "hidden" },
+  card: { padding: 24, backgroundColor: "rgba(255,255,255,0.9)" },
   title: { fontSize: 26, fontWeight: "800", textAlign: "center", marginBottom: 4, color: colors.ink },
   subtitle: { textAlign: "center", color: colors.inkSoft, marginBottom: 16 },
   imageBox: { width: "100%", height: 220, backgroundColor: colors.surfaceMuted, borderRadius: 16, alignItems: "center", justifyContent: "center", marginBottom: 20, overflow: "hidden" },
