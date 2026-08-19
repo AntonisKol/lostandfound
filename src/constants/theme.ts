@@ -9,6 +9,10 @@ export const colors = {
 
   ink: "#26231D",
   inkSoft: "#7A7266",
+  // Neutral charcoal for large dark fills (Landing, splash) - the warm
+  // brown-black of `ink` looks muddy at that scale, so this stays separate
+  // from the ink used for body text.
+  charcoal: "#2B2D30",
 
   found: "#3F6B4F",
   foundTint: "#E1EBE3",
