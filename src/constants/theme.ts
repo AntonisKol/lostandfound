@@ -2,10 +2,10 @@
 // brick terracotta for found/lost, an ink-stamp blue for selection/accent
 // states, and brass twine gold for ZIP tags and found map pins.
 export const colors = {
-  paper: "#F6F1E7",
-  surface: "#FFFFFF",
-  surfaceMuted: "#EFE8D8",
-  border: "#E1D6BE",
+  paper: "#c0c0c0ff",
+  surface: "#ffffff84",
+  surfaceMuted: "#dadadaff",
+  border: "#b6b6b6ff",
 
   ink: "#26231D",
   inkSoft: "#7A7266",
