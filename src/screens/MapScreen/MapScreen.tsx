@@ -3,6 +3,7 @@ import { View, ActivityIndicator, Alert, Text, Modal, Pressable, FlatList } from
 import MapView, { Marker, Callout } from "react-native-maps";
 import { supabase } from "../../supabase/supabase";
 import { useNavigation, StackActions } from "@react-navigation/native";
+import { colors } from "../../constants/theme";
 import { styles } from "./styled";
 
 type ItemType = "found" | "lost";
@@ -92,7 +93,7 @@ const MapScreen = () => {
     return Array.from(map.values());
   }, [items]);
 
-  if (loading) return <ActivityIndicator size="large" style={{ marginTop: 40 }} />;
+  if (loading) return <ActivityIndicator size="large" color={colors.ink} style={{ marginTop: 40 }} />;
 
   return (
     <>
@@ -114,7 +115,7 @@ const MapScreen = () => {
               <Marker
                 key={key}
                 coordinate={{ latitude: first.latitude, longitude: first.longitude }}
-                pinColor={first.type === "found" ? "gold" : "red"}
+                pinColor={first.type === "found" ? colors.twine : colors.lost}
                 onPress={() => navigation.dispatch(StackActions.push("ItemDetails", { ...first }))}
               >
                 <Callout>

@@ -13,7 +13,6 @@ import {
   ScrollView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
 import * as ImagePicker from "expo-image-picker";
 import { uploadImage } from "../../utils/storage";
@@ -193,10 +192,8 @@ const FoundItemScreen = () => {
               />
             </View>
 
-            <Pressable disabled={uploading} onPress={saveItem}>
-              <LinearGradient colors={["#618071ff", "#6e6e6eff"]} style={styles.saveButton}>
-                <Text style={styles.saveText}>Report Found Item</Text>
-              </LinearGradient>
+            <Pressable disabled={uploading} style={styles.saveButton} onPress={saveItem}>
+              <Text style={styles.saveText}>Report Found Item</Text>
             </Pressable>
           </BlurView>
         </ScrollView>

@@ -12,7 +12,6 @@ import {
   ActivityIndicator,
   ScrollView,
 } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
 import * as ImagePicker from "expo-image-picker";
 import { styles } from "./styled";
@@ -212,13 +211,8 @@ const LostItemScreen = () => {
               />
             </View>
 
-            <Pressable disabled={uploading} onPress={saveItem}>
-              <LinearGradient
-                colors={["#FF6B6B", "#FF4C4C"]}
-                style={styles.saveButton}
-              >
-                <Text style={styles.saveText}>Report Lost Item</Text>
-              </LinearGradient>
+            <Pressable disabled={uploading} style={styles.saveButton} onPress={saveItem}>
+              <Text style={styles.saveText}>Report Lost Item</Text>
             </Pressable>
           </BlurView>
         </ScrollView>

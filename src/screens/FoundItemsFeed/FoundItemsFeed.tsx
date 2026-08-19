@@ -13,6 +13,7 @@ import { supabase } from "../../supabase/supabase";
 import { useNavigation, StackActions } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { CATEGORIES as ITEM_CATEGORIES } from "../../constants/categories";
+import { colors } from "../../constants/theme";
 import { styles } from "./styled";
 
 type ItemType = "found" | "lost";
@@ -130,10 +131,15 @@ const FoundItemsFeed = () => {
   };
 
   if (loading)
-    return <ActivityIndicator size="large" color="#000" style={{ marginTop: 40 }} />;
+    return (
+      <View style={[styles.page, { justifyContent: "center" }]}>
+        <ActivityIndicator size="large" color={colors.ink} />
+      </View>
+    );
 
   return (
     <FlatList
+      style={styles.page}
       data={filteredItems}
       keyExtractor={(item) => `${item.type}-${item.id}`}
       renderItem={renderItem}

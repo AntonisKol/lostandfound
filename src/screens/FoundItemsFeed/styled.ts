@@ -1,21 +1,26 @@
 import { StyleSheet } from "react-native";
+import { colors } from "../../constants/theme";
 
 export const styles = StyleSheet.create({
+  page: {
+    flex: 1,
+    backgroundColor: colors.paper,
+  },
   categories: {
     marginBottom: 16,
   },
   categoryButton: {
     paddingHorizontal: 16,
     paddingVertical: 8,
-    backgroundColor: "#eee",
+    backgroundColor: colors.surfaceMuted,
     borderRadius: 20,
     marginRight: 10,
   },
   categoryButtonActive: {
-    backgroundColor: "#000",
+    backgroundColor: colors.stamp,
   },
   categoryText: {
-    color: "#000",
+    color: colors.ink,
     fontWeight: "600",
   },
   categoryTextActive: {
@@ -25,7 +30,9 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 16,
-    backgroundColor: "#f8f8f8",
+    backgroundColor: colors.surface,
+    borderColor: colors.border,
+    borderWidth: 1,
     borderRadius: 18,
     padding: 14,
   },
@@ -42,10 +49,10 @@ export const styles = StyleSheet.create({
     marginBottom: 4,
   },
   badgeFound: {
-    backgroundColor: "#618071ff",
+    backgroundColor: colors.found,
   },
   badgeLost: {
-    backgroundColor: "#FF4C4C",
+    backgroundColor: colors.lost,
   },
   badgeText: {
     color: "white",
@@ -57,13 +64,14 @@ export const styles = StyleSheet.create({
     fontWeight: "700",
     fontSize: 16,
     marginBottom: 2,
+    color: colors.ink,
   },
   location: {
-    color: "#555",
+    color: colors.inkSoft,
   },
   notes: {
     marginTop: 4,
     fontStyle: "italic",
-    color: "#333",
+    color: colors.inkSoft,
   },
 });

@@ -9,6 +9,7 @@ import {
   FlatList,
 } from "react-native";
 import { BERLIN_ZIP_CODES } from "../constants/berlinZipCodes";
+import { colors } from "../constants/theme";
 
 interface Props {
   value: string;
@@ -80,12 +81,12 @@ const ZipCodePicker = ({ value, onChange, placeholder = "Select ZIP code", style
 export default ZipCodePicker;
 
 const styles = StyleSheet.create({
-  valueText: { fontSize: 15, color: "#111" },
-  placeholderText: { fontSize: 15, color: "#888" },
-  modal: { flex: 1, backgroundColor: "#fff", paddingTop: 60, paddingHorizontal: 20 },
-  title: { fontSize: 20, fontWeight: "700", marginBottom: 16 },
+  valueText: { fontSize: 15, color: colors.ink },
+  placeholderText: { fontSize: 15, color: colors.inkSoft },
+  modal: { flex: 1, backgroundColor: colors.paper, paddingTop: 60, paddingHorizontal: 20 },
+  title: { fontSize: 20, fontWeight: "700", marginBottom: 16, color: colors.ink },
   search: {
-    backgroundColor: "#f0f0f0",
+    backgroundColor: colors.surfaceMuted,
     borderRadius: 12,
     padding: 12,
     fontSize: 15,
@@ -96,12 +97,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingVertical: 14,
     borderBottomWidth: 1,
-    borderBottomColor: "#eee",
+    borderBottomColor: colors.border,
   },
-  rowSelected: { backgroundColor: "#f5f5f5" },
-  rowZip: { fontSize: 15, fontWeight: "600" },
-  rowArea: { fontSize: 15, color: "#666" },
-  empty: { textAlign: "center", color: "#888", marginTop: 40 },
+  rowSelected: { backgroundColor: colors.surfaceMuted },
+  rowZip: { fontSize: 15, fontWeight: "600", color: colors.ink },
+  rowArea: { fontSize: 15, color: colors.inkSoft },
+  empty: { textAlign: "center", color: colors.inkSoft, marginTop: 40 },
   closeButton: { paddingVertical: 16, alignItems: "center" },
-  closeButtonText: { fontSize: 16, color: "#618071ff", fontWeight: "600" },
+  closeButtonText: { fontSize: 16, color: colors.stamp, fontWeight: "600" },
 });

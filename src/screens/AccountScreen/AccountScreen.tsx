@@ -11,10 +11,10 @@ import {
   ActivityIndicator,
   ScrollView,
 } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
 import { supabase } from "../../supabase/supabase";
 import { useAuth } from "../../context/AuthContext";
+import { colors } from "../../constants/theme";
 import ZipCodePicker from "../../components/ZipCodePicker";
 import DismissKeyboardOnTap from "../../components/DismissKeyboardOnTap";
 import { styles } from "./styled";
@@ -80,7 +80,7 @@ const AccountScreen = () => {
   };
 
   if (loading) {
-    return <ActivityIndicator size="large" style={{ marginTop: 60 }} />;
+    return <ActivityIndicator size="large" color={colors.ink} style={{ marginTop: 60 }} />;
   }
 
   if (session) {
@@ -153,10 +153,8 @@ const AccountScreen = () => {
               </View>
             )}
 
-            <Pressable disabled={submitting} onPress={submit}>
-              <LinearGradient colors={["#618071ff", "#6e6e6eff"]} style={styles.submitButton}>
-                <Text style={styles.submitText}>{mode === "signIn" ? "Sign In" : "Sign Up"}</Text>
-              </LinearGradient>
+            <Pressable disabled={submitting} style={styles.submitButton} onPress={submit}>
+              <Text style={styles.submitText}>{mode === "signIn" ? "Sign In" : "Sign Up"}</Text>
             </Pressable>
 
             <Pressable onPress={() => { setMode(mode === "signIn" ? "signUp" : "signIn"); resetForm(); }}>

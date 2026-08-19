@@ -1,4 +1,4 @@
-import { Text, Image, ScrollView, Button, View, Alert, Pressable } from "react-native";
+import { Text, Image, ScrollView, View, Alert, Pressable } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { styles } from "./styled";
 import React from "react";
@@ -54,10 +54,14 @@ const ItemDetailsScreen = () => {
         </>
       )}
 
-      <Button
-        title={isFound ? "Claim / Contact Finder" : "This is mine / Contact reporter"}
+      <Pressable
+        style={[styles.actionButton, isFound ? styles.actionButtonFound : styles.actionButtonLost]}
         onPress={() => Alert.alert("Coming soon", "This feature isn't available yet.")}
-      />
+      >
+        <Text style={styles.actionButtonText}>
+          {isFound ? "Claim / Contact Finder" : "This is mine / Contact reporter"}
+        </Text>
+      </Pressable>
     </ScrollView>
   );
 };

@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { colors } from '../../constants/theme';
 
 export const styles = StyleSheet.create({
   map: {
@@ -8,7 +9,7 @@ export const styles = StyleSheet.create({
     width: 34,
     height: 34,
     borderRadius: 17,
-    backgroundColor: '#333',
+    backgroundColor: colors.ink,
     borderWidth: 2,
     borderColor: 'white',
     alignItems: 'center',
@@ -21,7 +22,7 @@ export const styles = StyleSheet.create({
   },
   modal: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: colors.paper,
     paddingTop: 60,
     paddingHorizontal: 20,
   },
@@ -29,13 +30,14 @@ export const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '700',
     marginBottom: 16,
+    color: colors.ink,
   },
   modalRow: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 14,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: colors.border,
   },
   modalRowBadge: {
     paddingHorizontal: 10,
@@ -44,10 +46,10 @@ export const styles = StyleSheet.create({
     marginRight: 12,
   },
   modalRowBadgeFound: {
-    backgroundColor: '#618071ff',
+    backgroundColor: colors.found,
   },
   modalRowBadgeLost: {
-    backgroundColor: '#FF4C4C',
+    backgroundColor: colors.lost,
   },
   modalRowBadgeText: {
     color: 'white',
@@ -58,6 +60,7 @@ export const styles = StyleSheet.create({
   modalRowCategory: {
     fontSize: 15,
     fontWeight: '600',
+    color: colors.ink,
   },
   modalClose: {
     paddingVertical: 16,
@@ -65,7 +68,7 @@ export const styles = StyleSheet.create({
   },
   modalCloseText: {
     fontSize: 16,
-    color: '#618071ff',
+    color: colors.stamp,
     fontWeight: '600',
   },
 });

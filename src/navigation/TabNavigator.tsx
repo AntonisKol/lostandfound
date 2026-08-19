@@ -7,11 +7,11 @@ import AccountScreen from "../screens/AccountScreen/AccountScreen";
 
 const Tab = createBottomTabNavigator();
 
-export default function TabNavigator() {
+const TabNavigator = () => {
   return (
     <Tab.Navigator screenOptions={{ headerShown: false }}>
     <Tab.Screen name="Feed" component={FoundItemsFeed} />
-       <Tab.Screen name="Found" component={FoundItemScreen} />
+      <Tab.Screen name="Found" component={FoundItemScreen} />
       <Tab.Screen name="Lost" component={LostItemScreen} />
       <Tab.Screen name="Map" component={MapScreen} options={{ title: "Map" }} />
       <Tab.Screen name="Account" component={AccountScreen} />
@@ -19,3 +19,5 @@ export default function TabNavigator() {
     </Tab.Navigator>
   );
 }
+
+export default TabNavigator;
